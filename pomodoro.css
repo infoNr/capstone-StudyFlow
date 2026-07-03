@@ -1,0 +1,202 @@
+/* =============================================
+   POMODORO TIMER STYLES
+   ============================================= */
+
+.pomodoro-layout {
+  display: grid;
+  grid-template-columns: 1fr 340px;
+  gap: var(--space-lg);
+  align-items: start;
+}
+
+/* --- Pomodoro Card --- */
+.pomodoro-card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-lg);
+  padding: var(--space-xl);
+}
+
+/* --- Mode Tabs --- */
+.pomo-tabs {
+  display: flex;
+  gap: var(--space-sm);
+  background: rgba(255,255,255,0.04);
+  padding: 4px;
+  border-radius: var(--radius-lg);
+}
+.pomo-tab {
+  padding: 0.5rem 1.25rem;
+  border-radius: var(--radius-md);
+  border: none;
+  background: transparent;
+  color: var(--text-secondary);
+  font-family: var(--font);
+  font-size: var(--text-sm);
+  font-weight: 500;
+  cursor: pointer;
+  transition: all var(--transition-fast);
+  white-space: nowrap;
+}
+.pomo-tab.active {
+  background: var(--gradient-primary);
+  color: #fff;
+  box-shadow: 0 2px 10px var(--primary-glow);
+}
+.pomo-tab:not(.active):hover {
+  color: var(--text-primary);
+  background: var(--bg-card);
+}
+
+/* --- Timer Ring --- */
+.timer-ring-wrap {
+  position: relative;
+  width: 220px;
+  height: 220px;
+  flex-shrink: 0;
+}
+.timer-ring {
+  transform: rotate(-90deg);
+  filter: drop-shadow(0 0 20px rgba(124,58,237,0.4));
+}
+
+.timer-ring-bg {
+  fill: none;
+  stroke: rgba(255,255,255,0.06);
+  stroke-width: 10;
+}
+.timer-ring-progress {
+  fill: none;
+  stroke: url(#timerGradient);
+  stroke-width: 10;
+  stroke-linecap: round;
+  stroke-dasharray: 597;
+  stroke-dashoffset: 0;
+  transition: stroke-dashoffset 1s linear, stroke 0.3s ease;
+}
+
+.timer-ring-progress.break-mode { stroke: url(#breakGradient); }
+
+.timer-display {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+}
+
+.timer-time {
+  font-size: 3.25rem;
+  font-weight: 800;
+  letter-spacing: -2px;
+  color: var(--text-primary);
+  line-height: 1;
+  font-variant-numeric: tabular-nums;
+}
+
+.timer-mode-label {
+  font-size: var(--text-sm);
+  font-weight: 500;
+  color: var(--text-secondary);
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+}
+
+.timer-session-count {
+  display: flex;
+  gap: 5px;
+  margin-top: 4px;
+}
+.session-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--border);
+  transition: background var(--transition-base);
+}
+.session-dot.done { background: var(--primary); }
+
+/* --- Pulsing animation when running --- */
+.timer-ring.running .timer-ring-progress {
+  filter: drop-shadow(0 0 8px rgba(124,58,237,0.8));
+}
+
+/* --- Controls --- */
+.timer-controls {
+  display: flex;
+  align-items: center;
+  gap: var(--space-lg);
+}
+
+/* --- Task Link --- */
+.pomo-task-link {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  gap: var(--space-sm);
+}
+.pomo-task-link .input-label { margin-bottom: 0; white-space: nowrap; }
+.pomo-task-link .select-input { flex: 1; }
+
+/* --- Right Panel --- */
+.pomodoro-right {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-md);
+}
+
+.session-stats {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: var(--space-md);
+  margin-bottom: var(--space-md);
+  text-align: center;
+}
+.session-stat { padding: var(--space-sm); }
+.stat-big {
+  display: block;
+  font-size: var(--text-3xl);
+  font-weight: 800;
+  background: var(--gradient-primary);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  line-height: 1;
+  margin-bottom: 4px;
+}
+
+.session-log {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  max-height: 200px;
+  overflow-y: auto;
+}
+
+.session-log-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 8px 12px;
+  border-radius: var(--radius-sm);
+  background: rgba(255,255,255,0.03);
+  border: 1px solid var(--border);
+  font-size: var(--text-xs);
+  animation: taskIn 0.25s ease;
+}
+.session-log-item .session-task { color: var(--text-primary); font-weight: 500; }
+.session-log-item .session-time { color: var(--text-muted); }
+.session-log-item .session-emoji { font-size: 1rem; }
+
+/* --- Settings Panel --- */
+#pomodoroSettingsPanel .form-group { margin-bottom: var(--space-sm); }
+
+/* --- Responsive --- */
+@media (max-width: 900px) {
+  .pomodoro-layout {
+    grid-template-columns: 1fr;
+  }
+}

@@ -1,0 +1,622 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>StudyFlow — Your Ultimate Study Companion</title>
+  <meta name="description" content="StudyFlow is a powerful all-in-one study planner featuring a Todo List, Pomodoro Timer, Reminders, Quiz Maker, and Flashcards to supercharge your learning." />
+  <meta name="keywords" content="study planner, pomodoro timer, flashcards, quiz maker, todo list, study app" />
+
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&display=swap" rel="stylesheet" />
+
+  <!-- CSS -->
+  <link rel="stylesheet" href="css/index.css" />
+  <link rel="stylesheet" href="css/sidebar.css" />
+  <link rel="stylesheet" href="css/todo.css" />
+  <link rel="stylesheet" href="css/pomodoro.css" />
+  <link rel="stylesheet" href="css/reminders.css" />
+  <link rel="stylesheet" href="css/quiz.css" />
+  <link rel="stylesheet" href="css/flashcard.css" />
+</head>
+<body>
+  <!-- Sidebar Navigation -->
+  <nav class="sidebar" id="sidebar" aria-label="Main Navigation">
+    <div class="sidebar-header">
+      <div class="logo">
+        <span class="logo-icon">⚡</span>
+        <span class="logo-text">StudyFlow</span>
+      </div>
+      <button class="sidebar-toggle" id="sidebarToggle" aria-label="Toggle sidebar">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+          <line x1="3" y1="6" x2="21" y2="6"/>
+          <line x1="3" y1="12" x2="21" y2="12"/>
+          <line x1="3" y1="18" x2="21" y2="18"/>
+        </svg>
+      </button>
+    </div>
+
+    <ul class="nav-list" role="menubar">
+      <li class="nav-item active" role="none">
+        <button class="nav-btn" id="nav-todo" data-section="todo" role="menuitem" aria-current="page">
+          <span class="nav-icon">📋</span>
+          <span class="nav-label">Todo List</span>
+        </button>
+      </li>
+      <li class="nav-item" role="none">
+        <button class="nav-btn" id="nav-pomodoro" data-section="pomodoro" role="menuitem">
+          <span class="nav-icon">🍅</span>
+          <span class="nav-label">Pomodoro</span>
+        </button>
+      </li>
+      <li class="nav-item" role="none">
+        <button class="nav-btn" id="nav-reminders" data-section="reminders" role="menuitem">
+          <span class="nav-icon">🔔</span>
+          <span class="nav-label">Reminders</span>
+          <span class="nav-badge" id="reminderBadge" style="display:none">0</span>
+        </button>
+      </li>
+      <li class="nav-item" role="none">
+        <button class="nav-btn" id="nav-quiz" data-section="quiz" role="menuitem">
+          <span class="nav-icon">🧠</span>
+          <span class="nav-label">Quiz Maker</span>
+        </button>
+      </li>
+      <li class="nav-item" role="none">
+        <button class="nav-btn" id="nav-flashcard" data-section="flashcard" role="menuitem">
+          <span class="nav-icon">🃏</span>
+          <span class="nav-label">Flashcards</span>
+        </button>
+      </li>
+    </ul>
+
+    <div class="sidebar-footer">
+      <button class="theme-toggle" id="themeToggle" aria-label="Toggle theme">
+        <span class="theme-icon">🌙</span>
+        <span class="theme-label">Dark Mode</span>
+      </button>
+    </div>
+  </nav>
+
+  <!-- Mobile Bottom Navigation -->
+  <nav class="mobile-nav" aria-label="Mobile Navigation">
+    <button class="mobile-nav-btn active" data-section="todo">
+      <span>📋</span><span class="mobile-label">Todo</span>
+    </button>
+    <button class="mobile-nav-btn" data-section="pomodoro">
+      <span>🍅</span><span class="mobile-label">Pomodoro</span>
+    </button>
+    <button class="mobile-nav-btn" data-section="reminders">
+      <span>🔔</span><span class="mobile-label">Reminders</span>
+    </button>
+    <button class="mobile-nav-btn" data-section="quiz">
+      <span>🧠</span><span class="mobile-label">Quiz</span>
+    </button>
+    <button class="mobile-nav-btn" data-section="flashcard">
+      <span>🃏</span><span class="mobile-label">Cards</span>
+    </button>
+  </nav>
+
+  <!-- Main Content -->
+  <main class="main-content" id="mainContent">
+
+    <!-- ===== TODO LIST SECTION ===== -->
+    <section class="section active" id="section-todo" aria-labelledby="todo-heading">
+      <div class="section-header">
+        <div>
+          <h1 id="todo-heading">Todo List</h1>
+          <p class="section-subtitle">Stay on top of your study tasks</p>
+        </div>
+        <div class="section-header-actions">
+          <div class="progress-ring-wrap">
+            <svg class="progress-ring" width="56" height="56">
+              <circle class="progress-ring-bg" cx="28" cy="28" r="22"/>
+              <circle class="progress-ring-fill" id="todoProgressRing" cx="28" cy="28" r="22"/>
+            </svg>
+            <span class="progress-ring-text" id="todoProgressText">0%</span>
+          </div>
+          <button class="btn btn-primary" id="openAddTask">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+            Add Task
+          </button>
+        </div>
+      </div>
+
+      <!-- Todo Filters -->
+      <div class="todo-filters">
+        <div class="filter-pills">
+          <button class="pill active" data-filter="all">All</button>
+          <button class="pill" data-filter="active">Active</button>
+          <button class="pill" data-filter="completed">Completed</button>
+          <button class="pill" data-filter="high">🔴 High</button>
+          <button class="pill" data-filter="medium">🟡 Medium</button>
+          <button class="pill" data-filter="low">🟢 Low</button>
+        </div>
+        <div class="sort-wrap">
+          <select class="select-input" id="todoSort">
+            <option value="created">Created</option>
+            <option value="duedate">Due Date</option>
+            <option value="priority">Priority</option>
+          </select>
+        </div>
+      </div>
+
+      <!-- Stats bar -->
+      <div class="todo-stats">
+        <div class="stat-card">
+          <span class="stat-num" id="statTotal">0</span>
+          <span class="stat-label">Total</span>
+        </div>
+        <div class="stat-card">
+          <span class="stat-num accent" id="statActive">0</span>
+          <span class="stat-label">Active</span>
+        </div>
+        <div class="stat-card">
+          <span class="stat-num success" id="statDone">0</span>
+          <span class="stat-label">Done</span>
+        </div>
+        <div class="stat-card">
+          <span class="stat-num warning" id="statOverdue">0</span>
+          <span class="stat-label">Overdue</span>
+        </div>
+      </div>
+
+      <!-- Todo List -->
+      <div class="todo-list" id="todoList" role="list">
+        <div class="empty-state" id="todoEmpty">
+          <div class="empty-icon">📋</div>
+          <h3>No tasks yet!</h3>
+          <p>Add your first study task to get started.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===== POMODORO SECTION ===== -->
+    <section class="section" id="section-pomodoro" aria-labelledby="pomodoro-heading">
+      <div class="section-header">
+        <div>
+          <h1 id="pomodoro-heading">Pomodoro Timer</h1>
+          <p class="section-subtitle">Focus deeply, rest intentionally</p>
+        </div>
+        <button class="btn btn-secondary" id="pomodoroSettings">
+          ⚙️ Settings
+        </button>
+      </div>
+
+      <div class="pomodoro-layout">
+        <!-- Timer Card -->
+        <div class="glass-card pomodoro-card">
+          <!-- Mode Tabs -->
+          <div class="pomo-tabs">
+            <button class="pomo-tab active" id="tab-work" data-mode="work">Focus</button>
+            <button class="pomo-tab" id="tab-short" data-mode="short">Short Break</button>
+            <button class="pomo-tab" id="tab-long" data-mode="long">Long Break</button>
+          </div>
+
+          <!-- SVG Timer Ring -->
+          <div class="timer-ring-wrap">
+            <svg class="timer-ring" viewBox="0 0 220 220" width="220" height="220">
+              <defs>
+                <linearGradient id="timerGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+                  <stop offset="0%" style="stop-color:#7c3aed"/>
+                  <stop offset="100%" style="stop-color:#06b6d4"/>
+                </linearGradient>
+              </defs>
+              <circle class="timer-ring-bg" cx="110" cy="110" r="95"/>
+              <circle class="timer-ring-progress" id="timerRingProgress" cx="110" cy="110" r="95"/>
+            </svg>
+            <div class="timer-display">
+              <div class="timer-time" id="timerDisplay">25:00</div>
+              <div class="timer-mode-label" id="timerModeLabel">Focus Time</div>
+              <div class="timer-session-count">
+                <span id="sessionDots"></span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Controls -->
+          <div class="timer-controls">
+            <button class="btn-icon" id="timerReset" aria-label="Reset timer">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="1 4 1 10 7 10"/><path d="M3.51 15a9 9 0 1 0 .49-3.67"/></svg>
+            </button>
+            <button class="btn btn-primary btn-xl" id="timerToggle">Start</button>
+            <button class="btn-icon" id="timerSkip" aria-label="Skip to next">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="5 4 15 12 5 20 5 4"/><line x1="19" y1="5" x2="19" y2="19"/></svg>
+            </button>
+          </div>
+
+          <!-- Task Link -->
+          <div class="pomo-task-link">
+            <label for="pomodoroTaskSelect" class="input-label">Studying:</label>
+            <select class="select-input" id="pomodoroTaskSelect">
+              <option value="">— Select a task —</option>
+            </select>
+          </div>
+        </div>
+
+        <!-- Right panel: Session Log -->
+        <div class="pomodoro-right">
+          <div class="glass-card">
+            <h3 class="card-title">Today's Sessions</h3>
+            <div class="session-stats">
+              <div class="session-stat">
+                <span class="stat-big" id="todayPomodoros">0</span>
+                <span class="stat-label">Pomodoros</span>
+              </div>
+              <div class="session-stat">
+                <span class="stat-big" id="todayMinutes">0</span>
+                <span class="stat-label">Minutes</span>
+              </div>
+            </div>
+            <div class="session-log" id="sessionLog">
+              <div class="empty-state-sm">No sessions yet today.</div>
+            </div>
+          </div>
+
+          <!-- Settings Panel (hidden by default) -->
+          <div class="glass-card" id="pomodoroSettingsPanel" style="display:none">
+            <h3 class="card-title">⚙️ Timer Settings</h3>
+            <div class="form-group">
+              <label class="input-label">Focus Duration (min)</label>
+              <input type="number" class="text-input" id="settingWork" value="25" min="1" max="60" />
+            </div>
+            <div class="form-group">
+              <label class="input-label">Short Break (min)</label>
+              <input type="number" class="text-input" id="settingShort" value="5" min="1" max="30" />
+            </div>
+            <div class="form-group">
+              <label class="input-label">Long Break (min)</label>
+              <input type="number" class="text-input" id="settingLong" value="15" min="1" max="60" />
+            </div>
+            <div class="form-group">
+              <label class="input-label">Long Break After (sessions)</label>
+              <input type="number" class="text-input" id="settingCycles" value="4" min="2" max="8" />
+            </div>
+            <button class="btn btn-primary w-full" id="saveSettings">Save Settings</button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===== REMINDERS SECTION ===== -->
+    <section class="section" id="section-reminders" aria-labelledby="reminders-heading">
+      <div class="section-header">
+        <div>
+          <h1 id="reminders-heading">Reminders</h1>
+          <p class="section-subtitle">Never miss an important study session</p>
+        </div>
+        <button class="btn btn-primary" id="openAddReminder">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+          New Reminder
+        </button>
+      </div>
+
+      <!-- Notification permission banner -->
+      <div class="notification-banner" id="notifBanner">
+        <span>🔔 Enable browser notifications to receive alerts even when the app is in background.</span>
+        <button class="btn btn-sm" id="enableNotif">Enable</button>
+        <button class="btn-close" id="dismissNotifBanner">✕</button>
+      </div>
+
+      <!-- Upcoming -->
+      <div class="reminders-layout">
+        <div class="reminders-upcoming">
+          <h3 class="subsection-title">Upcoming</h3>
+          <div class="reminder-list" id="reminderList">
+            <div class="empty-state" id="reminderEmpty">
+              <div class="empty-icon">🔔</div>
+              <h3>No reminders set</h3>
+              <p>Add a reminder to stay on schedule.</p>
+            </div>
+          </div>
+        </div>
+        <div class="reminders-past">
+          <h3 class="subsection-title">Past</h3>
+          <div class="reminder-list" id="reminderPastList">
+            <div class="empty-state-sm" id="reminderPastEmpty">No past reminders.</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===== QUIZ MAKER SECTION ===== -->
+    <section class="section" id="section-quiz" aria-labelledby="quiz-heading">
+      <div class="section-header">
+        <div>
+          <h1 id="quiz-heading">Quiz Maker</h1>
+          <p class="section-subtitle">Test your knowledge, track your progress</p>
+        </div>
+        <button class="btn btn-primary" id="openCreateQuiz">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+          New Quiz
+        </button>
+      </div>
+
+      <!-- Quiz Views: Library, Create, Take, Results -->
+      <div id="quizLibraryView">
+        <div class="quiz-grid" id="quizGrid">
+          <div class="empty-state" id="quizEmpty">
+            <div class="empty-icon">🧠</div>
+            <h3>No quizzes yet</h3>
+            <p>Create your first quiz to test your knowledge.</p>
+          </div>
+        </div>
+      </div>
+
+      <div id="quizCreateView" style="display:none">
+        <div class="glass-card quiz-create-card">
+          <div class="quiz-create-header">
+            <button class="btn btn-ghost" id="backToLibrary">← Back</button>
+            <h2 class="card-title" id="quizCreateTitle">Create New Quiz</h2>
+            <button class="btn btn-primary" id="saveQuiz">Save Quiz</button>
+          </div>
+          <div class="form-group">
+            <label class="input-label">Quiz Title</label>
+            <input type="text" class="text-input" id="quizTitle" placeholder="e.g. Chapter 3 Biology" />
+          </div>
+          <div class="form-group">
+            <label class="input-label">Subject / Category</label>
+            <input type="text" class="text-input" id="quizSubject" placeholder="e.g. Biology" />
+          </div>
+          <div class="quiz-questions-list" id="quizQuestionsList"></div>
+          <button class="btn btn-secondary w-full" id="addQuestion">+ Add Question</button>
+        </div>
+      </div>
+
+      <div id="quizTakeView" style="display:none">
+        <div class="glass-card quiz-take-card">
+          <div class="quiz-take-header">
+            <div>
+              <h2 id="quizTakeName"></h2>
+              <div class="quiz-progress-bar-wrap">
+                <div class="quiz-progress-bar" id="quizProgressBar"></div>
+              </div>
+              <span class="quiz-progress-text" id="quizProgressText">Question 1 of 1</span>
+            </div>
+            <div class="quiz-timer" id="quizTimer">⏱ 0s</div>
+          </div>
+          <div class="quiz-question-wrap" id="quizQuestionWrap"></div>
+          <div class="quiz-nav">
+            <button class="btn btn-ghost" id="quizPrev">← Prev</button>
+            <button class="btn btn-primary" id="quizNext">Next →</button>
+          </div>
+        </div>
+      </div>
+
+      <div id="quizResultsView" style="display:none">
+        <div class="glass-card quiz-results-card">
+          <div class="results-header">
+            <div class="score-circle" id="scoreCircle">
+              <span id="scorePercent">0%</span>
+            </div>
+            <h2 id="resultsQuizName"></h2>
+            <p id="resultsSubtitle"></p>
+          </div>
+          <div class="results-breakdown" id="resultsBreakdown"></div>
+          <div class="results-actions">
+            <button class="btn btn-secondary" id="retakeQuiz">🔄 Retake</button>
+            <button class="btn btn-primary" id="backToLibraryFromResults">📚 Back to Library</button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===== FLASHCARDS SECTION ===== -->
+    <section class="section" id="section-flashcard" aria-labelledby="flashcard-heading">
+      <div class="section-header">
+        <div>
+          <h1 id="flashcard-heading">Flashcards</h1>
+          <p class="section-subtitle">Master concepts through active recall</p>
+        </div>
+        <button class="btn btn-primary" id="openCreateDeck">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+          New Deck
+        </button>
+      </div>
+
+      <!-- Deck Library View -->
+      <div id="deckLibraryView">
+        <div class="deck-grid" id="deckGrid">
+          <div class="empty-state" id="deckEmpty">
+            <div class="empty-icon">🃏</div>
+            <h3>No decks yet</h3>
+            <p>Create your first flashcard deck to start studying.</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Deck Edit View -->
+      <div id="deckEditView" style="display:none">
+        <div class="glass-card">
+          <div class="deck-edit-header">
+            <button class="btn btn-ghost" id="backToDeckLibrary">← Back</button>
+            <h2 class="card-title" id="deckEditTitle">Edit Deck</h2>
+            <button class="btn btn-primary" id="startStudyDeck">▶ Study</button>
+          </div>
+          <div class="form-group">
+            <label class="input-label">Deck Name</label>
+            <input type="text" class="text-input" id="deckNameInput" placeholder="e.g. Biology Vocabulary" />
+          </div>
+          <div class="form-group">
+            <label class="input-label">Color Tag</label>
+            <div class="color-picker" id="deckColorPicker">
+              <button class="color-dot active" data-color="#7c3aed" style="background:#7c3aed"></button>
+              <button class="color-dot" data-color="#06b6d4" style="background:#06b6d4"></button>
+              <button class="color-dot" data-color="#10b981" style="background:#10b981"></button>
+              <button class="color-dot" data-color="#f59e0b" style="background:#f59e0b"></button>
+              <button class="color-dot" data-color="#ef4444" style="background:#ef4444"></button>
+              <button class="color-dot" data-color="#ec4899" style="background:#ec4899"></button>
+            </div>
+          </div>
+          <div class="flashcard-cards-list" id="flashcardsList"></div>
+          <button class="btn btn-secondary w-full" id="addFlashcard">+ Add Card</button>
+          <button class="btn btn-primary w-full mt-sm" id="saveDeck">Save Deck</button>
+        </div>
+      </div>
+
+      <!-- Study Mode View -->
+      <div id="flashcardStudyView" style="display:none">
+        <div class="study-header">
+          <button class="btn btn-ghost" id="exitStudy">← Exit</button>
+          <div class="study-progress-wrap">
+            <div class="study-progress-bar-bg">
+              <div class="study-progress-bar-fill" id="studyProgressFill"></div>
+            </div>
+            <span id="studyProgressLabel">Card 1 of 1</span>
+          </div>
+          <span class="study-deck-name" id="studyDeckName"></span>
+        </div>
+
+        <div class="flashcard-study-area">
+          <div class="flashcard-3d" id="flashcard3d" tabindex="0" role="button" aria-label="Click to flip flashcard">
+            <div class="flashcard-inner" id="flashcardInner">
+              <div class="flashcard-face flashcard-front">
+                <div class="card-side-label">QUESTION</div>
+                <div class="card-content" id="cardFrontContent"></div>
+              </div>
+              <div class="flashcard-face flashcard-back">
+                <div class="card-side-label">ANSWER</div>
+                <div class="card-content" id="cardBackContent"></div>
+              </div>
+            </div>
+          </div>
+
+          <p class="flip-hint" id="flipHint">Click card or press Space to flip</p>
+
+          <!-- Rating buttons (shown after flip) -->
+          <div class="rating-buttons" id="ratingButtons" style="display:none">
+            <button class="rating-btn rating-again" data-rating="again">😰 Again</button>
+            <button class="rating-btn rating-hard" data-rating="hard">😓 Hard</button>
+            <button class="rating-btn rating-good" data-rating="good">🙂 Good</button>
+            <button class="rating-btn rating-easy" data-rating="easy">😊 Easy</button>
+          </div>
+
+          <div class="study-nav">
+            <button class="btn btn-ghost" id="studyPrev">← Prev</button>
+            <span id="studyCardCount">1 / 1</span>
+            <button class="btn btn-ghost" id="studyNext">Next →</button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- ===== MODALS ===== -->
+
+  <!-- Add Task Modal -->
+  <div class="modal-overlay" id="addTaskModal" role="dialog" aria-modal="true" aria-labelledby="addTaskTitle">
+    <div class="modal">
+      <div class="modal-header">
+        <h2 id="addTaskTitle">Add Task</h2>
+        <button class="btn-close" id="closeAddTask" aria-label="Close">✕</button>
+      </div>
+      <div class="modal-body">
+        <div class="form-group">
+          <label class="input-label" for="taskTitle">Task Title *</label>
+          <input type="text" class="text-input" id="taskTitle" placeholder="What do you need to study?" />
+        </div>
+        <div class="form-group">
+          <label class="input-label" for="taskDesc">Description</label>
+          <textarea class="text-input textarea" id="taskDesc" placeholder="Add details..." rows="3"></textarea>
+        </div>
+        <div class="form-row">
+          <div class="form-group">
+            <label class="input-label" for="taskPriority">Priority</label>
+            <select class="select-input" id="taskPriority">
+              <option value="medium">Medium</option>
+              <option value="high">High</option>
+              <option value="low">Low</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label class="input-label" for="taskDue">Due Date</label>
+            <input type="date" class="text-input" id="taskDue" />
+          </div>
+        </div>
+        <div class="form-group">
+          <label class="input-label" for="taskCategory">Category / Tag</label>
+          <input type="text" class="text-input" id="taskCategory" placeholder="e.g. Math, Biology..." />
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-ghost" id="cancelAddTask">Cancel</button>
+        <button class="btn btn-primary" id="saveTask">Add Task</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Add Reminder Modal -->
+  <div class="modal-overlay" id="addReminderModal" role="dialog" aria-modal="true" aria-labelledby="addReminderTitle">
+    <div class="modal">
+      <div class="modal-header">
+        <h2 id="addReminderTitle">New Reminder</h2>
+        <button class="btn-close" id="closeAddReminder" aria-label="Close">✕</button>
+      </div>
+      <div class="modal-body">
+        <div class="form-group">
+          <label class="input-label" for="reminderTitle">Title *</label>
+          <input type="text" class="text-input" id="reminderTitle" placeholder="Reminder title..." />
+        </div>
+        <div class="form-group">
+          <label class="input-label" for="reminderNote">Note</label>
+          <textarea class="text-input textarea" id="reminderNote" placeholder="Optional details..." rows="2"></textarea>
+        </div>
+        <div class="form-row">
+          <div class="form-group">
+            <label class="input-label" for="reminderDate">Date *</label>
+            <input type="date" class="text-input" id="reminderDate" />
+          </div>
+          <div class="form-group">
+            <label class="input-label" for="reminderTime">Time *</label>
+            <input type="time" class="text-input" id="reminderTime" />
+          </div>
+        </div>
+        <div class="form-group">
+          <label class="input-label" for="reminderRepeat">Repeat</label>
+          <select class="select-input" id="reminderRepeat">
+            <option value="once">Once</option>
+            <option value="daily">Daily</option>
+            <option value="weekly">Weekly</option>
+          </select>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-ghost" id="cancelAddReminder">Cancel</button>
+        <button class="btn btn-primary" id="saveReminder">Set Reminder</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Hidden SVG Gradient Definitions -->
+  <svg width="0" height="0" style="position:absolute">
+    <defs>
+      <linearGradient id="progressGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+        <stop offset="0%" style="stop-color:#7c3aed"/>
+        <stop offset="100%" style="stop-color:#06b6d4"/>
+      </linearGradient>
+      <linearGradient id="timerGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+        <stop offset="0%" style="stop-color:#7c3aed"/>
+        <stop offset="100%" style="stop-color:#06b6d4"/>
+      </linearGradient>
+      <linearGradient id="breakGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+        <stop offset="0%" style="stop-color:#10b981"/>
+        <stop offset="100%" style="stop-color:#06b6d4"/>
+      </linearGradient>
+    </defs>
+  </svg>
+
+  <!-- Toast Container -->
+  <div class="toast-container" id="toastContainer" aria-live="polite"></div>
+
+  <!-- JavaScript -->
+  <script src="js/app.js"></script>
+  <script src="js/todo.js"></script>
+  <script src="js/pomodoro.js"></script>
+  <script src="js/reminders.js"></script>
+  <script src="js/quiz.js"></script>
+  <script src="js/flashcard.js"></script>
+</body>
+</html>
