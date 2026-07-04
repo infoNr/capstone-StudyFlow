@@ -47,6 +47,18 @@ capstore/
     ├── quiz.js         # Quiz creation, quiz taking, scoring
     └── flashcard.js    # Deck management, card flip, spaced repetition
 ```
+flowchart LR
+    Setup --> Subjects
+    Subjects --> Todos
+    Todos --> Pomodoro
+    Todos --> Reminders
+    Subjects --> Flashcards
+    Subjects --> Quizzes
+    Flashcards -.-> Quizzes
+    Pomodoro --> Dashboard
+    Todos --> Dashboard
+    Flashcards --> Dashboard
+    Reminders --> Dashboard
 
 ---
 
